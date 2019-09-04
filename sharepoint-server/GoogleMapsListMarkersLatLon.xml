@@ -1,0 +1,74 @@
+﻿<xsl:stylesheet xmlns:x="http://www.w3.org/2001/XMLSchema" xmlns:d="http://schemas.microsoft.com/sharepoint/dsp" version="1.0" exclude-result-prefixes="xsl msxsl ddwrt" xmlns:ddwrt="http://schemas.microsoft.com/WebParts/v2/DataView/runtime" xmlns:asp="http://schemas.microsoft.com/ASPNET/20" xmlns:__designer="http://schemas.microsoft.com/WebParts/v2/DataView/designer" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:SharePoint="Microsoft.SharePoint.WebControls" xmlns:ddwrt2="urn:frontpage:internal">
+	<xsl:output method="html" indent="no"/>
+	<xsl:decimal-format NaN=""/>
+	<xsl:param name="dvt_apos">&apos;</xsl:param>
+	<xsl:variable name="dvt_1_automode">0</xsl:variable>
+	<xsl:template match="/" xmlns:x="http://www.w3.org/2001/XMLSchema" xmlns:d="http://schemas.microsoft.com/sharepoint/dsp" xmlns:asp="http://schemas.microsoft.com/ASPNET/20" xmlns:__designer="http://schemas.microsoft.com/WebParts/v2/DataView/designer" xmlns:SharePoint="Microsoft.SharePoint.WebControls">
+		<xsl:call-template name="dvt_1"/>
+	</xsl:template>
+	
+	<xsl:template name="AddMarkers">
+	    <xsl:param name="Rows"/>
+	    <xsl:text disable-output-escaping="yes"><![CDATA[
+	            <script type="text/javascript">
+	            function AddMarkers()
+	            {
+	            ]]></xsl:text>
+		    <xsl:for-each select="$Rows">
+		      	<xsl:if test="not(normalize-space(@WorkAddress) = '' and normalize-space(@WorkCity) = '' and normalize-space(@WorkState) = '')">
+		        showLocation('<xsl:value-of select="@FirstName" />','<xsl:value-of select="@Latitude" />','<xsl:value-of select="@Longitude" />');
+		      </xsl:if>
+		    </xsl:for-each>
+		    <xsl:text disable-output-escaping="yes"><![CDATA[
+	            }
+	            </script>
+	            ]]>
+	     </xsl:text>
+	</xsl:template>
+	
+	<xsl:template name="dvt_1">
+		<xsl:variable name="dvt_StyleName">Table</xsl:variable>
+		<xsl:variable name="Rows" select="/dsQueryResponse/Rows/Row"/>
+		<xsl:call-template name="AddMarkers">
+		  	<xsl:with-param name="Rows" select="$Rows"/>
+		</xsl:call-template>
+
+		<table border="0" width="100%" cellpadding="2" cellspacing="0">
+			<tr valign="top">
+				<xsl:if test="$dvt_1_automode = '1'" ddwrt:cf_ignore="1">
+					<th class="ms-vh" width="1%" nowrap="nowrap"></th>
+				</xsl:if><th class="ms-vh" nowrap="">First Name</th><th class="ms-vh" nowrap="">Latitude</th><th class="ms-vh" nowrap=""></th><th class="ms-vh" nowrap=""></th><th class="ms-vh" nowrap="">Longitude</th></tr>
+			<xsl:call-template name="dvt_1.body">
+				<xsl:with-param name="Rows" select="$Rows"/>
+			</xsl:call-template>
+		</table>
+	</xsl:template>
+	<xsl:template name="dvt_1.body">
+		<xsl:param name="Rows"/>
+		<xsl:for-each select="$Rows">
+			<xsl:call-template name="dvt_1.rowview"/>
+		</xsl:for-each>
+	</xsl:template>
+	<xsl:template name="dvt_1.rowview">
+		<tr>
+			<xsl:if test="position() mod 2 = 1">
+				<xsl:attribute name="class">ms-alternating</xsl:attribute>
+			</xsl:if><td class="ms-vb">
+				<xsl:value-of select="@FirstName" /></td><td class="ms-vb">
+				<xsl:value-of select="@WorkAddress" />
+				<xsl:text xmlns:ddwrt="http://schemas.microsoft.com/WebParts/v2/DataView/runtime" ddwrt:whitespace-preserve="yes" xml:space="preserve"> </xsl:text>
+				<xsl:value-of select="@Latitude" />
+				<xsl:text xmlns:ddwrt="http://schemas.microsoft.com/WebParts/v2/DataView/runtime" ddwrt:whitespace-preserve="yes" xml:space="preserve"> </xsl:text>
+				
+			</td><td class="ms-vb">
+				</td><td class="ms-vb">
+				</td><td class="ms-vb">
+				<xsl:value-of select="@Longitude" /></td>
+			<xsl:if test="$dvt_1_automode = '1'" ddwrt:cf_ignore="1">
+				<td class="ms-vb" width="1%" nowrap="nowrap">
+					<span ddwrt:amkeyfield="ID" ddwrt:amkeyvalue="ddwrt:EscapeDelims(string(@ID))" ddwrt:ammode="view"></span>
+				</td>
+			</xsl:if>
+			</tr>
+	</xsl:template>
+</xsl:stylesheet>	
